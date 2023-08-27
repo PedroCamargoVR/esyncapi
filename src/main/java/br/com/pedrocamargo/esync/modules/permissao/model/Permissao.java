@@ -1,5 +1,6 @@
 package br.com.pedrocamargo.esync.modules.permissao.model;
 
+import br.com.pedrocamargo.esync.modules.permissao.dto.PermissaoDTORequest;
 import br.com.pedrocamargo.esync.modules.usuario.model.Usuario;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -24,4 +25,11 @@ public class Permissao {
     @JoinColumn(name = "id_permissao")
     private List<Usuario> usuarios;
 
+    public Permissao (String descricao){
+        this.descricao = descricao;
+    }
+
+    public void update(PermissaoDTORequest permissaoRequest) {
+        this.descricao = permissaoRequest.descricao();
+    }
 }
