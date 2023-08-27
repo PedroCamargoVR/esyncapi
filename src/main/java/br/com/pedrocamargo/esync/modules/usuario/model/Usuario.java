@@ -1,8 +1,11 @@
 package br.com.pedrocamargo.esync.modules.usuario.model;
 
 import br.com.pedrocamargo.esync.modules.permissao.model.Permissao;
+import br.com.pedrocamargo.esync.modules.usuario.dto.UsuarioDTORequest;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.Map;
 
 @Entity
 @Table(name = "usuario")
@@ -25,5 +28,33 @@ public class Usuario {
 
     public Long getIdPermissao(){
         return this.permissao.getId();
+    }
+
+    public void update(UsuarioDTORequest usuarioRequest,Permissao permissao) {
+        this.permissao = permissao;
+        Map<String, Object> mapAttributes = usuarioRequest.mapAttributes();
+        for(String keyAttribute : mapAttributes.keySet()){
+            if(mapAttributes.get(keyAttribute) != null){
+                setAttributeByNameString(keyAttribute,mapAttributes.get(keyAttribute));
+            }
+        }
+    }
+
+    private void setAttributeByNameString(String key, Object o){
+        switch (key){
+            case "nome":
+                this.nome = (String) o;
+                break;
+            case "usuario":
+                this.usuario = (String) o;
+                break;
+            case "senha":
+                this.senha = (String) o;
+                break;
+        }
+    }
+
+    public void delete(){
+        this.is_active = false;
     }
 }
