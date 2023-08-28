@@ -9,17 +9,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 public record CompradorDTORequest(
-        @NotNull
-        @NotBlank
+        @NotBlank(message = "{notblank}")
         String nome,
-        @NotNull
-        @NotBlank
+        @NotBlank(message = "{notblank}")
         String sobrenome,
-        @NotNull
+        @NotNull(message = "{notnull}")
         Long cpf,
-        @NotNull
+        @NotNull(message = "{notnull}")
         Long rg,
-        @NotNull
+        @NotNull(message = "{notnull}")
         LocalDate dataNascimento
 ) {
         public Map<String,Object>toMapAttributes(){

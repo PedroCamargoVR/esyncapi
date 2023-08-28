@@ -8,18 +8,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 public record EnderecoDTORequest(
-        @NotBlank
+        @NotBlank(message = "{notblank}")
         String logradouro,
-        @NotBlank
+        @NotBlank(message = "{notblank}")
         String endereco,
-        @NotBlank
+        @NotBlank(message = "{notblank}")
         String cidade,
-        @NotBlank
+        @NotNull(message = "{notnull")
         UFEnum uf,
-        @NotBlank
+        @NotBlank(message = "{notblank}")
         String pais,
-        @NotBlank
-        @NotNull
+        @NotNull(message = "{notnull")
         Long cep) {
 
         public Map<String,Object> toMapAttributes(){

@@ -25,7 +25,7 @@ public class Endereco {
     private String cidade;
     private String uf;
     private String pais;
-    Long cep;
+    private Long cep;
     @OneToMany
     @JoinColumn(name = "id_endereco")
     private List<Fornecedor> fornecedores;

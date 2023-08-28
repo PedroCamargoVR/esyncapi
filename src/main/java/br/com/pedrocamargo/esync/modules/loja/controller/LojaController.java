@@ -8,6 +8,7 @@ import br.com.pedrocamargo.esync.modules.loja.dto.LojaDTORequest;
 import br.com.pedrocamargo.esync.modules.loja.model.Loja;
 import br.com.pedrocamargo.esync.modules.loja.repository.LojaRepository;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -35,14 +36,14 @@ public class LojaController {
         return ResponseEntity.ok(page);
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public ResponseEntity getLojaById(@PathVariable("id") Long idLoja){
         return ResponseEntity.ok(repository.getReferenceById(idLoja));
     }
 
     @PostMapping
     @Transactional
-    public ResponseEntity addLoja(@RequestBody LojaDTORequest lojaRequest, UriComponentsBuilder uriBuilder){
+    public ResponseEntity addLoja(@RequestBody @Valid LojaDTORequest lojaRequest, UriComponentsBuilder uriBuilder){
         Endereco endereco = enderecoRepository.getReferenceById(lojaRequest.id_endereco());
 
         Loja lojaInserida = repository.save(new Loja(endereco,lojaRequest));

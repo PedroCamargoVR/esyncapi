@@ -9,6 +9,7 @@ import br.com.pedrocamargo.esync.modules.usuario.model.Usuario;
 import br.com.pedrocamargo.esync.modules.usuario.repository.UsuarioRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,9 +38,14 @@ public class UsuarioController {
         return ResponseEntity.ok(page);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<UsuarioDTO> getUsuarioById(@PathVariable("id") Long idUsuario){
+        return ResponseEntity.ok(new UsuarioDTO(repository.getReferenceById(idUsuario)));
+    }
+
     @PostMapping
     @Transactional
-    public ResponseEntity<UsuarioDTO> addUsuario(@RequestBody UsuarioDTORequest usuarioRequest, UriComponentsBuilder uriBuilder){
+    public ResponseEntity<UsuarioDTO> addUsuario(@RequestBody @Valid UsuarioDTORequest usuarioRequest, UriComponentsBuilder uriBuilder){
         try{
             Permissao permissao = permissaoRepository.getReferenceById(usuarioRequest.id_permissao());
             Usuario usuarioInserido = repository.save(new Usuario(null,permissao,usuarioRequest.nome(), usuarioRequest.usuario(), usuarioRequest.senha(), true));
@@ -52,7 +58,7 @@ public class UsuarioController {
         }
     }
 
-    @PutMapping("{id}")
+    @PutMapping("/{id}")
     @Transactional
     public ResponseEntity updateUsuario(@PathVariable("id") Long idUsuario, @RequestBody UsuarioDTORequest usuarioRequest){
         Usuario usuario = repository.getReferenceById(idUsuario);
@@ -65,7 +71,7 @@ public class UsuarioController {
         return ResponseEntity.ok().body(new UsuarioDTO(usuario));
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity deleteUsuario(@PathVariable("id") Long idUsuario){
         Usuario usuario = repository.getReferenceById(idUsuario);
         usuario.delete();

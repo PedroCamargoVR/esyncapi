@@ -7,6 +7,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.util.List;
 
@@ -16,6 +17,13 @@ public class ErrorsCatcher {
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity error404(){
         return new ResponseEntity<>(new MessageResponse(HttpStatus.NOT_FOUND.value(), "Objeto não encontrado."),HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public void error400(MethodArgumentTypeMismatchException ex){
+        for(StackTraceElement stackTraceElement : ex.getStackTrace()){
+            System.out.println(stackTraceElement.toString());
+        }
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

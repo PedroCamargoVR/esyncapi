@@ -5,6 +5,7 @@ import br.com.pedrocamargo.esync.modules.permissao.dto.PermissaoDTORequest;
 import br.com.pedrocamargo.esync.modules.permissao.model.Permissao;
 import br.com.pedrocamargo.esync.modules.permissao.repository.PermissaoRepository;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,14 +28,14 @@ public class PermissaoController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity addPermissao(@RequestBody PermissaoDTORequest permissaoRequest, UriComponentsBuilder uriBuilder){
+    public ResponseEntity addPermissao(@RequestBody @Valid PermissaoDTORequest permissaoRequest, UriComponentsBuilder uriBuilder){
         Permissao permissao = repository.save(new Permissao(permissaoRequest.descricao()));
 
         URI uri = uriBuilder.path("permissao/{id}").buildAndExpand(permissao.getId()).toUri();
         return ResponseEntity.created(uri).body(new PermissaoDTO(permissao));
     }
 
-    @PutMapping("{id}")
+    @PutMapping("/{id}")
     @Transactional
     public ResponseEntity updatePermissao(@PathVariable("id") Long idPermissao, @RequestBody PermissaoDTORequest permissaoRequest){
         Permissao permissao = repository.getReferenceById(idPermissao);

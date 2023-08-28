@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Entity
 @Table(name = "fornecedor")
@@ -31,29 +32,38 @@ public class Fornecedor {
     @JoinColumn(name = "id_fornecedor")
     private List<Produto> produtos;
 
-    public Fornecedor(FornecedorDTORequest fornecedorRequest){
-        this.endereco = fornecedorRequest.endereco();
+    public Fornecedor(Endereco endereco,FornecedorDTORequest fornecedorRequest){
+        this.endereco = endereco;
         this.numeroimovel = fornecedorRequest.numeroimovel();
         this.nomefantasia = fornecedorRequest.nomefantasia();
         this.razaosocial = fornecedorRequest.razaosocial();
         this.cnpj = fornecedorRequest.cnpj();
     }
 
-    public void update(FornecedorDTORequest fornecedorRequest) {
-        if(fornecedorRequest.endereco() != null){
-            this.endereco = fornecedorRequest.endereco();
+    public void update(Endereco endereco, FornecedorDTORequest fornecedorRequest) {
+        this.endereco = endereco;
+        Map<String,Object> mapAttributes = fornecedorRequest.mapAttributes();
+        for(String keyAttribute : mapAttributes.keySet()){
+            if(mapAttributes.get(keyAttribute) != null){
+                this.setAttributeByNameString(keyAttribute,mapAttributes.get(keyAttribute));
+            }
         }
-        if(fornecedorRequest.numeroimovel() != null){
-            this.numeroimovel = fornecedorRequest.numeroimovel();
-        }
-        if(fornecedorRequest.nomefantasia() != null){
-            this.nomefantasia = fornecedorRequest.nomefantasia();
-        }
-        if(fornecedorRequest.razaosocial() != null){
-            this.razaosocial = fornecedorRequest.razaosocial();
-        }
-        if(fornecedorRequest.cnpj() != null){
-            this.cnpj = fornecedorRequest.cnpj();
+    }
+
+    private void setAttributeByNameString(String keyAttribute, Object o) {
+        switch (keyAttribute){
+            case "numeroimovel":
+                this.numeroimovel = (Integer) o;
+                break;
+            case "nomefantasia":
+                this.nomefantasia = (String) o;
+                break;
+            case "razaosocial":
+                this.razaosocial = (String) o;
+                break;
+            case "cnpj":
+                this.cnpj = (String) o;
+                break;
         }
     }
 

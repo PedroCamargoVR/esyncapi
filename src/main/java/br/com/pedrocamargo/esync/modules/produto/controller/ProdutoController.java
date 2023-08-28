@@ -12,6 +12,7 @@ import br.com.pedrocamargo.esync.modules.produto.repository.ProdutoRepository;
 import br.com.pedrocamargo.esync.modules.tipoproduto.model.TipoProduto;
 import br.com.pedrocamargo.esync.modules.tipoproduto.repository.TipoProdutoRepository;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -46,7 +47,7 @@ public class ProdutoController {
         return ResponseEntity.ok(page);
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<ProdutoDTO> getProdutoById(@PathVariable("id") Long idProduto){
         Produto produto = repository.getReferenceById(idProduto);
 
@@ -55,7 +56,7 @@ public class ProdutoController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity addProduto(@RequestBody ProdutoDTORequest produtoRequest, UriComponentsBuilder uriBUilder){
+    public ResponseEntity addProduto(@RequestBody @Valid ProdutoDTORequest produtoRequest, UriComponentsBuilder uriBUilder){
         Fornecedor fornecedor = fornecedorRepository.getReferenceById(produtoRequest.id_fornecedor());
         Comprador comprador = compradorRepository.getReferenceById(produtoRequest.id_comprador());
         TipoProduto tipoProduto = tipoProdutoRepository.getReferenceById(produtoRequest.id_tipoproduto());
@@ -66,7 +67,7 @@ public class ProdutoController {
         return ResponseEntity.created(uri).body(new ProdutoDTO(produto));
     }
 
-    @PutMapping("{id}")
+    @PutMapping("/{id}")
     @Transactional
     public ResponseEntity updateProduto(@PathVariable("id") Long idProduto, @RequestBody ProdutoDTORequest produtoDTORequest){
         Produto produto = repository.getReferenceById(idProduto);
@@ -88,7 +89,7 @@ public class ProdutoController {
         return ResponseEntity.ok(new ProdutoDTO(produto));
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity deleteProduto(@PathVariable("id") Long idProduto){
         Produto produto = repository.getReferenceById(idProduto);
         produto.delete();

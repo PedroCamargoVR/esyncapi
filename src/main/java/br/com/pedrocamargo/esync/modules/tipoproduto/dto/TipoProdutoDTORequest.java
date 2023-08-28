@@ -1,4 +1,9 @@
 package br.com.pedrocamargo.esync.modules.tipoproduto.dto;
 
-public record TipoProdutoDTORequest(String descricao) {
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
+public record TipoProdutoDTORequest(
+        @NotBlank(message = "{notblank}")
+        String descricao) {
 }

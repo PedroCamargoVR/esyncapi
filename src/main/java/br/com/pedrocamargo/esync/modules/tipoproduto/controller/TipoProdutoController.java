@@ -5,6 +5,7 @@ import br.com.pedrocamargo.esync.modules.tipoproduto.dto.TipoProdutoDTORequest;
 import br.com.pedrocamargo.esync.modules.tipoproduto.model.TipoProduto;
 import br.com.pedrocamargo.esync.modules.tipoproduto.repository.TipoProdutoRepository;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,21 +28,21 @@ public class TipoProdutoController {
         return ResponseEntity.ok(repository.findAll(pageable).map(TipoProdutoDTO::new));
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<TipoProdutoDTO> getTipoProdutoByid(@PathVariable("id") Long idTipoProduto){
         return ResponseEntity.ok(new TipoProdutoDTO(repository.getReferenceById(idTipoProduto)));
     }
 
     @PostMapping
     @Transactional
-    public ResponseEntity addTipoProduto(@RequestBody TipoProdutoDTORequest tipoProdutoRequest, UriComponentsBuilder uriBuilder){
+    public ResponseEntity addTipoProduto(@RequestBody @Valid TipoProdutoDTORequest tipoProdutoRequest, UriComponentsBuilder uriBuilder){
         TipoProduto tipoProduto = repository.save(new TipoProduto(tipoProdutoRequest.descricao()));
 
         URI uri = uriBuilder.path("tipoproduto/{id}").buildAndExpand(tipoProduto.getId()).toUri();
         return ResponseEntity.created(uri).body(new TipoProdutoDTO(tipoProduto));
     }
 
-    @PutMapping("{id}")
+    @PutMapping("/{id}")
     @Transactional
     public ResponseEntity updateTipoProduto(@PathVariable("id") Long idTipoProduto, @RequestBody TipoProdutoDTORequest tipoProdutoRequest){
         TipoProduto tipoProduto = repository.getReferenceById(idTipoProduto);
