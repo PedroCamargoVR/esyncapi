@@ -19,13 +19,6 @@ public class ErrorsCatcher {
         return new ResponseEntity<>(new MessageResponse(HttpStatus.NOT_FOUND.value(), "Objeto não encontrado."),HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    public void error400(MethodArgumentTypeMismatchException ex){
-        for(StackTraceElement stackTraceElement : ex.getStackTrace()){
-            System.out.println(stackTraceElement.toString());
-        }
-    }
-
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity erroValidacao(MethodArgumentNotValidException ex){
         List<FieldError> fieldErros = ex.getFieldErrors();

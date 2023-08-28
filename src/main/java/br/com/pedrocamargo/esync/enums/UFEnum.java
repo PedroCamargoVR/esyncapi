@@ -43,7 +43,7 @@ public enum UFEnum {
         UFEnum[] enums = UFEnum.values();
 
         for (UFEnum item : enums) {
-            if(item.description == enumString){
+            if(enumString.equals(item.description)){
                 return item;
             }
         }

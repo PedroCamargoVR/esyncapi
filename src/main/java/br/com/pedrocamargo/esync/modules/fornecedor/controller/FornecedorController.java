@@ -20,7 +20,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
 
 @RestController
-@RequestMapping(name = "fornecedor")
+@RequestMapping("fornecedor")
 public class FornecedorController {
 
     @Autowired
@@ -35,7 +35,7 @@ public class FornecedorController {
         return ResponseEntity.ok(page);
     }
 
-    @GetMapping("/{id}")
+   @GetMapping("/{id}")
     public ResponseEntity getFornecedorById(@PathVariable("id") Long idFornecedor){
         return ResponseEntity.ok(repository.getReferenceById(idFornecedor));
     }
