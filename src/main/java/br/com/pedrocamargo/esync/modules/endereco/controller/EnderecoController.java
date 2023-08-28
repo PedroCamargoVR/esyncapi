@@ -1,6 +1,5 @@
 package br.com.pedrocamargo.esync.modules.endereco.controller;
 
-import br.com.pedrocamargo.esync.helpers.MessageResponse;
 import br.com.pedrocamargo.esync.modules.endereco.dto.EnderecoDTO;
 import br.com.pedrocamargo.esync.modules.endereco.dto.EnderecoDTORequest;
 import br.com.pedrocamargo.esync.modules.endereco.model.Endereco;
@@ -11,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -50,9 +48,6 @@ public class EnderecoController {
     @PutMapping("/{id}")
     @Transactional
     public ResponseEntity updateEndereco(@PathVariable("id") Long idEndereco, @RequestBody EnderecoDTORequest enderecoRequest){
-        if(idEndereco == null){
-            return ResponseEntity.badRequest().body(new MessageResponse(HttpStatus.BAD_REQUEST.value(),"ID do Endereco nao pode ser nulo"));
-        }
         Endereco endereco = repository.getReferenceById(idEndereco);
         endereco.update(enderecoRequest);
 

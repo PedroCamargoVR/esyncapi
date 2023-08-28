@@ -32,9 +32,6 @@ public class FornecedorController {
 
     @GetMapping("{id}")
     public ResponseEntity getFornecedorById(@PathVariable("id") Long idFornecedor){
-        if(idFornecedor == null){
-            return ResponseEntity.badRequest().body(new MessageResponse(HttpStatus.BAD_REQUEST.value(), "O ID nao pode ser nulo."));
-        }
         return ResponseEntity.ok(repository.getReferenceById(idFornecedor));
     }
 
@@ -50,9 +47,6 @@ public class FornecedorController {
     @PutMapping("/{id}")
     @Transactional
     public ResponseEntity updateFornecedor(@PathVariable("id") Long idFornecedor, @RequestBody FornecedorDTORequest fornecedorRequest){
-        if(idFornecedor == null){
-            return ResponseEntity.badRequest().body(new MessageResponse(HttpStatus.BAD_REQUEST.value(), "O ID nao pode ser nulo."));
-        }
         Fornecedor fornecedor = repository.getReferenceById(idFornecedor);
         fornecedor.update(fornecedorRequest);
 
@@ -61,9 +55,6 @@ public class FornecedorController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity deleteFornecedor(@PathVariable("id") Long idFornecedor){
-        if(idFornecedor == null){
-            return ResponseEntity.badRequest().body(new MessageResponse(HttpStatus.BAD_REQUEST.value(), "O ID nao pode ser nulo."));
-        }
         Fornecedor fornecedor = repository.getReferenceById(idFornecedor);
         fornecedor.delete();
 

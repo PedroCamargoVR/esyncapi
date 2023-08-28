@@ -1,6 +1,7 @@
 package br.com.pedrocamargo.esync.modules.comprador.model;
 
 import br.com.pedrocamargo.esync.modules.comprador.dto.CompradorDTORequest;
+import br.com.pedrocamargo.esync.modules.produto.model.Produto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,6 +10,7 @@ import lombok.Setter;
 import org.hibernate.Hibernate;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -28,6 +30,9 @@ public class Comprador {
     private Long rg;
     private LocalDate datanascimento;
     private Boolean is_active = true;
+    @OneToMany
+    @JoinColumn(name = "id_comprador")
+    private List<Produto> produtos;
 
     public Comprador(CompradorDTORequest comprador) {
         this.nome = comprador.nome();

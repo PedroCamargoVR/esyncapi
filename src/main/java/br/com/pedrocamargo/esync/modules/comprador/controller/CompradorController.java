@@ -33,9 +33,6 @@ public class CompradorController {
 
     @GetMapping("/{idComprador}")
     public ResponseEntity getCompradorById(@PathVariable("id") Long idComprador){
-        if(idComprador == null){
-            return ResponseEntity.badRequest().body(new MessageResponse(HttpStatus.BAD_REQUEST.value(),"O ID nao pode ser nulo."));
-        }
         Comprador comprador = repository.getReferenceById(idComprador);
         return ResponseEntity.ok(new CompradorDTO(comprador));
     }
@@ -54,9 +51,6 @@ public class CompradorController {
     @PutMapping("/{id}")
     @Transactional
     public ResponseEntity updateComprador(@PathVariable("id") Long idComprador, @RequestBody CompradorDTORequest comprador){
-        if(idComprador == null){
-            return ResponseEntity.badRequest().body(new MessageResponse(HttpStatus.BAD_REQUEST.value(),"O ID nao pode ser nulo."));
-        }
         Comprador compradorBanco = repository.getReferenceById(idComprador);
         compradorBanco.update(comprador);
 
@@ -65,9 +59,6 @@ public class CompradorController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity deleteComprador(@PathVariable("id") Long idComprador){
-        if(idComprador == null){
-            return ResponseEntity.badRequest().body(new MessageResponse(HttpStatus.BAD_REQUEST.value(),"O ID nao pode ser nulo."));
-        }
         Comprador comprador = repository.getReferenceById(idComprador);
         comprador.delete();
         return ResponseEntity.ok().body(new MessageResponse(HttpStatus.OK.value(), "O comprador ID " + idComprador + " foi excluido com sucesso."));

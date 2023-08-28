@@ -2,8 +2,11 @@ package br.com.pedrocamargo.esync.modules.fornecedor.model;
 
 import br.com.pedrocamargo.esync.modules.fornecedor.dto.FornecedorDTORequest;
 import br.com.pedrocamargo.esync.modules.endereco.model.Endereco;
+import br.com.pedrocamargo.esync.modules.produto.model.Produto;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 @Entity
 @Table(name = "fornecedor")
@@ -24,6 +27,9 @@ public class Fornecedor {
     private String razaosocial;
     private String cnpj;
     private Boolean is_active = true;
+    @OneToMany
+    @JoinColumn(name = "id_fornecedor")
+    private List<Produto> produtos;
 
     public Fornecedor(FornecedorDTORequest fornecedorRequest){
         this.endereco = fornecedorRequest.endereco();

@@ -37,9 +37,6 @@ public class LojaController {
 
     @GetMapping("{id}")
     public ResponseEntity getLojaById(@PathVariable("id") Long idLoja){
-        if(idLoja == null){
-            return ResponseEntity.badRequest().body(new MessageResponse(HttpStatus.BAD_REQUEST.value(), "O ID nao pode ser nulo."));
-        }
         return ResponseEntity.ok(repository.getReferenceById(idLoja));
     }
 
@@ -57,9 +54,6 @@ public class LojaController {
     @PutMapping("/{id}")
     @Transactional
     public ResponseEntity updateLoja(@PathVariable("id") Long idLoja, @RequestBody LojaDTORequest lojaRequest){
-        if(idLoja == null){
-            return ResponseEntity.badRequest().body(new MessageResponse(HttpStatus.BAD_REQUEST.value(), "O ID nao pode ser nulo."));
-        }
         Loja loja = repository.getReferenceById(idLoja);
         if(loja.getEndereco().getId() != lojaRequest.id_endereco()){
             Endereco endereco = enderecoRepository.getReferenceById(lojaRequest.id_endereco());
@@ -72,9 +66,6 @@ public class LojaController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity deleteLoja(@PathVariable("id") Long idLoja){
-        if(idLoja == null){
-            return ResponseEntity.badRequest().body(new MessageResponse(HttpStatus.BAD_REQUEST.value(), "O ID nao pode ser nulo."));
-        }
         Loja loja = repository.getReferenceById(idLoja);
         loja.delete();
 

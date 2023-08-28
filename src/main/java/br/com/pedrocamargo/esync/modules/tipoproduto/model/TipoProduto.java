@@ -1,9 +1,11 @@
 package br.com.pedrocamargo.esync.modules.tipoproduto.model;
 
+import br.com.pedrocamargo.esync.modules.produto.model.Produto;
 import br.com.pedrocamargo.esync.modules.tipoproduto.dto.TipoProdutoDTORequest;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
 
 @Entity
 @Table(name = "tipoproduto")
@@ -17,6 +19,9 @@ public class TipoProduto {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String descricao;
+    @OneToMany
+    @JoinColumn(name = "id_tipoproduto")
+    private List<Produto> produtos;
 
     public TipoProduto(String descricao){
         this.descricao = descricao;
