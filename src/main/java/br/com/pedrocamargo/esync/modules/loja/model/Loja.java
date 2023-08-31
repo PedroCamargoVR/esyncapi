@@ -1,9 +1,12 @@
 package br.com.pedrocamargo.esync.modules.loja.model;
 
 import br.com.pedrocamargo.esync.modules.endereco.model.Endereco;
+import br.com.pedrocamargo.esync.modules.locacao.model.Locacao;
 import br.com.pedrocamargo.esync.modules.loja.dto.LojaDTORequest;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 @Entity
 @Table(name = "loja")
@@ -24,6 +27,10 @@ public class Loja {
     private String razaosocial;
     private String cnpj;
     private Boolean is_active = true;
+
+    @OneToMany
+    @JoinColumn(name = "id_produto")
+    List<Locacao> locacoes;
 
     public Loja(Endereco endereco, LojaDTORequest lojaRequest){
         this.endereco = endereco;

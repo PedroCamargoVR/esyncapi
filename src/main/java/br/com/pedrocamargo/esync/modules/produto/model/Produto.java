@@ -2,6 +2,7 @@ package br.com.pedrocamargo.esync.modules.produto.model;
 
 import br.com.pedrocamargo.esync.modules.comprador.model.Comprador;
 import br.com.pedrocamargo.esync.modules.fornecedor.model.Fornecedor;
+import br.com.pedrocamargo.esync.modules.locacao.model.Locacao;
 import br.com.pedrocamargo.esync.modules.produto.dto.ProdutoDTORequest;
 import br.com.pedrocamargo.esync.modules.tipoproduto.model.TipoProduto;
 import jakarta.persistence.*;
@@ -35,6 +36,9 @@ public class Produto {
     @JoinColumn(name = "id_tipoproduto")
     private TipoProduto tipoProduto;
 
+    @OneToOne
+    @JoinColumn(name = "id_produto")
+    private Locacao locacao;
 
     public Produto(Fornecedor fornecedor, Comprador comprador, TipoProduto tipoProduto, ProdutoDTORequest produtoRequest) {
         this.descricao = produtoRequest.descricao();
