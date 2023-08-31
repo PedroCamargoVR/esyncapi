@@ -36,10 +36,6 @@ public class Produto {
     @JoinColumn(name = "id_tipoproduto")
     private TipoProduto tipoProduto;
 
-    @OneToOne
-    @JoinColumn(name = "id_produto")
-    private Locacao locacao;
-
     public Produto(Fornecedor fornecedor, Comprador comprador, TipoProduto tipoProduto, ProdutoDTORequest produtoRequest) {
         this.descricao = produtoRequest.descricao();
         this.preco = produtoRequest.preco();

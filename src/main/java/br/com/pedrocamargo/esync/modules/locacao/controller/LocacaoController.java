@@ -1,5 +1,6 @@
 package br.com.pedrocamargo.esync.modules.locacao.controller;
 
+import br.com.pedrocamargo.esync.modules.locacao.dto.LocacaoDTO;
 import br.com.pedrocamargo.esync.modules.locacao.dto.LocacaoDTORequest;
 import br.com.pedrocamargo.esync.modules.locacao.dto.LocacaoDTOUpdate;
 import br.com.pedrocamargo.esync.modules.locacao.model.Locacao;
@@ -35,33 +36,33 @@ public class LocacaoController {
     private LojaRepository lojaRepository;
 
     @GetMapping
-    public ResponseEntity<Page<Locacao>> getLocacoes(@PageableDefault(sort = "id")Pageable pageable){
-        return ResponseEntity.ok(repository.findAll(pageable));
+    public ResponseEntity<Page<LocacaoDTO>> getLocacoes(@PageableDefault(sort = "id")Pageable pageable){
+        return ResponseEntity.ok(repository.findAll(pageable).map(LocacaoDTO::new));
     }
 
     @GetMapping("/{idProduto}")
-    public ResponseEntity<Locacao> getLocacao(@PathVariable(name = "idProduto") Long idProduto){
-        return ResponseEntity.ok(repository.getReferenceByIdProduto(idProduto));
+    public ResponseEntity<LocacaoDTO> getLocacao(@PathVariable(name = "idProduto") Long idProduto){
+        return ResponseEntity.ok(new LocacaoDTO(repository.getLocacaoByIdProduto(idProduto)));
     }
 
     @PostMapping
     @Transactional
-    public ResponseEntity<Locacao> addLocacao(@RequestBody @Valid LocacaoDTORequest locacaoRequest, UriComponentsBuilder uriBuilder){
+    public ResponseEntity<LocacaoDTO> addLocacao(@RequestBody @Valid LocacaoDTORequest locacaoRequest, UriComponentsBuilder uriBuilder){
         Produto produto = produtoRepository.getReferenceById(locacaoRequest.idProduto());
         Loja loja = lojaRepository.getReferenceById(locacaoRequest.idLoja());
         Locacao locacao = repository.save(new Locacao(null,produto,loja));
 
         URI uri = uriBuilder.path("/locacao/{id}").buildAndExpand(locacao.getId()).toUri();
-        return ResponseEntity.created(uri).body(locacao);
+        return ResponseEntity.created(uri).body(new LocacaoDTO(locacao));
     }
 
     @PutMapping("/{idProduto}")
     @Transactional
-    public ResponseEntity<Locacao> updateLocacao(@PathVariable Long idProduto, @RequestBody @Valid LocacaoDTOUpdate locacaoRequest){
+    public ResponseEntity<LocacaoDTO> updateLocacao(@PathVariable Long idProduto, @RequestBody @Valid LocacaoDTOUpdate locacaoRequest){
         Loja loja = lojaRepository.getReferenceById(locacaoRequest.idLoja());
-        Locacao locacao = repository.getReferenceByIdProduto(idProduto);
+        Locacao locacao = repository.getLocacaoByIdProduto(idProduto);
         locacao.update(loja);
 
-        return ResponseEntity.ok(locacao);
+        return ResponseEntity.ok(new LocacaoDTO(locacao));
     }
 }

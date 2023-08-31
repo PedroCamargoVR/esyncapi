@@ -63,7 +63,7 @@ public class UsuarioController {
     public ResponseEntity updateUsuario(@PathVariable("id") Long idUsuario, @RequestBody UsuarioDTORequest usuarioRequest){
         Usuario usuario = repository.getReferenceById(idUsuario);
         Permissao permissao = usuario.getPermissao();
-        if(usuario.getIdPermissao() != usuarioRequest.id_permissao()){
+        if(usuarioRequest.id_permissao() != null && usuario.getIdPermissao() != usuarioRequest.id_permissao()){
             permissao = permissaoRepository.getReferenceById(usuarioRequest.id_permissao());
         }
         usuario.update(usuarioRequest,permissao);
