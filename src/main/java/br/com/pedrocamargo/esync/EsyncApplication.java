@@ -8,6 +8,4 @@ public class EsyncApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(EsyncApplication.class, args);
 	}
-
-
 }
