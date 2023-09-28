@@ -7,6 +7,7 @@ import br.com.pedrocamargo.esync.modules.fornecedor.dto.FornecedorDTO;
 import br.com.pedrocamargo.esync.modules.fornecedor.dto.FornecedorDTORequest;
 import br.com.pedrocamargo.esync.modules.fornecedor.model.Fornecedor;
 import br.com.pedrocamargo.esync.modules.fornecedor.repository.FornecedorRepository;
+import br.com.pedrocamargo.esync.modules.fornecedor.service.FornecedorService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,50 +25,37 @@ import java.net.URI;
 public class FornecedorController {
 
     @Autowired
-    FornecedorRepository repository;
-
-    @Autowired
-    EnderecoRepository enderecoRepository;
+    FornecedorService fornecedorService;
 
     @GetMapping
     public ResponseEntity<Page<FornecedorDTO>> getFornecedores(Pageable pageable){
-        Page<FornecedorDTO> page = repository.findAll(pageable).map(FornecedorDTO::new);
+        Page<FornecedorDTO> page = fornecedorService.getFornecedores(pageable);
         return ResponseEntity.ok(page);
     }
 
    @GetMapping("/{id}")
     public ResponseEntity getFornecedorById(@PathVariable("id") Long idFornecedor){
-        return ResponseEntity.ok(repository.getReferenceById(idFornecedor));
+        return ResponseEntity.ok(fornecedorService.getFornecedor(idFornecedor));
     }
 
     @PostMapping
     @Transactional
     public ResponseEntity addFornecedor(@RequestBody @Valid FornecedorDTORequest fornecedorRequest, UriComponentsBuilder uriBuilder){
-        Endereco endereco = enderecoRepository.getReferenceById(fornecedorRequest.id_endereco());
-        Fornecedor fornecedorInserido = repository.save(new Fornecedor(endereco,fornecedorRequest));
+        Fornecedor fornecedorInserido = fornecedorService.adicionarFornecedor(fornecedorRequest);
         URI uri = uriBuilder.path("fornecedor/{id}").buildAndExpand(fornecedorInserido.getId()).toUri();
-
         return ResponseEntity.created(uri).body(new FornecedorDTO(fornecedorInserido));
     }
 
     @PutMapping("/{id}")
     @Transactional
     public ResponseEntity updateFornecedor(@PathVariable("id") Long idFornecedor, @RequestBody FornecedorDTORequest fornecedorRequest){
-        Fornecedor fornecedor = repository.getReferenceById(idFornecedor);
-        Endereco endereco = fornecedor.getEndereco();
-        if(fornecedor.getEndereco().getId() != fornecedorRequest.id_endereco()){
-            endereco = enderecoRepository.getReferenceById(fornecedorRequest.id_endereco());
-        }
-        fornecedor.update(endereco,fornecedorRequest);
-
+        Fornecedor fornecedor = fornecedorService.atualizarFornecedor(idFornecedor,fornecedorRequest);
         return ResponseEntity.ok(new FornecedorDTO(fornecedor));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity deleteFornecedor(@PathVariable("id") Long idFornecedor){
-        Fornecedor fornecedor = repository.getReferenceById(idFornecedor);
-        fornecedor.delete();
-
+        fornecedorService.deletarFornecedor(idFornecedor);
         return ResponseEntity.ok().body(new MessageResponse(HttpStatus.OK.value(), "Fornecedor com ID " + idFornecedor + " excluiído com sucesso."));
     }
 

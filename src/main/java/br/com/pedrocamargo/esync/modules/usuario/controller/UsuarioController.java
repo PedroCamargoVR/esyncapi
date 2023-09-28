@@ -7,6 +7,7 @@ import br.com.pedrocamargo.esync.modules.usuario.dto.UsuarioDTO;
 import br.com.pedrocamargo.esync.modules.usuario.dto.UsuarioDTORequest;
 import br.com.pedrocamargo.esync.modules.usuario.model.Usuario;
 import br.com.pedrocamargo.esync.modules.usuario.repository.UsuarioRepository;
+import br.com.pedrocamargo.esync.modules.usuario.service.UsuarioService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -26,56 +27,42 @@ import java.net.URI;
 public class UsuarioController {
 
     @Autowired
-    private UsuarioRepository repository;
-
-    @Autowired
-    private PermissaoRepository permissaoRepository;
+    UsuarioService usuarioService;
 
     @GetMapping
     public ResponseEntity<Page<UsuarioDTO>> getAllUsuarios(@PageableDefault(sort = "nome") Pageable pageable){
-        Page<UsuarioDTO> page = repository.findAll(pageable).map(usuario -> new UsuarioDTO(usuario));
-
+        Page<UsuarioDTO> page = usuarioService.getUsuarios(pageable);
         return ResponseEntity.ok(page);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<UsuarioDTO> getUsuarioById(@PathVariable("id") Long idUsuario){
-        return ResponseEntity.ok(new UsuarioDTO(repository.getReferenceById(idUsuario)));
+        UsuarioDTO usuarioDTO = new UsuarioDTO(usuarioService.getUsuario(idUsuario));
+        return ResponseEntity.ok(usuarioDTO);
     }
 
     @PostMapping
     @Transactional
-    public ResponseEntity<UsuarioDTO> addUsuario(@RequestBody @Valid UsuarioDTORequest usuarioRequest, UriComponentsBuilder uriBuilder){
-        try{
-            Permissao permissao = permissaoRepository.getReferenceById(usuarioRequest.id_permissao());
-            Usuario usuarioInserido = repository.save(new Usuario(null,permissao,usuarioRequest.nome(), usuarioRequest.usuario(), usuarioRequest.senha(), true));
-
-            URI uri = uriBuilder.path("usuario/{id}").buildAndExpand(usuarioInserido.getId()).toUri();
-
-            return ResponseEntity.created(uri).body(new UsuarioDTO(usuarioInserido));
-        }catch(EntityNotFoundException ex){
+    public ResponseEntity addUsuario(@RequestBody @Valid UsuarioDTORequest usuarioRequest, UriComponentsBuilder uriBuilder){
+        Usuario usuarioInserido = usuarioService.adicionarUsuario(usuarioRequest);
+        if(usuarioInserido == null){
             return new ResponseEntity(new MessageResponse(HttpStatus.NOT_FOUND.value(), "Permissao informada nao existe"),HttpStatus.NOT_FOUND);
         }
+
+        URI uri = uriBuilder.path("usuario/{id}").buildAndExpand(usuarioInserido.getId()).toUri();
+        return ResponseEntity.created(uri).body(new UsuarioDTO(usuarioInserido));
     }
 
     @PutMapping("/{id}")
     @Transactional
     public ResponseEntity updateUsuario(@PathVariable("id") Long idUsuario, @RequestBody UsuarioDTORequest usuarioRequest){
-        Usuario usuario = repository.getReferenceById(idUsuario);
-        Permissao permissao = usuario.getPermissao();
-        if(usuarioRequest.id_permissao() != null && usuario.getIdPermissao() != usuarioRequest.id_permissao()){
-            permissao = permissaoRepository.getReferenceById(usuarioRequest.id_permissao());
-        }
-        usuario.update(usuarioRequest,permissao);
-
+        Usuario usuario = usuarioService.atualizarUsuario(idUsuario,usuarioRequest);
         return ResponseEntity.ok().body(new UsuarioDTO(usuario));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity deleteUsuario(@PathVariable("id") Long idUsuario){
-        Usuario usuario = repository.getReferenceById(idUsuario);
-        usuario.delete();
-
+        usuarioService.deletarUsuario(idUsuario);
         return ResponseEntity.ok().body(new MessageResponse(HttpStatus.OK.value(), "Usuario com ID " + idUsuario + " foi excluído do sistema."));
     }
 }

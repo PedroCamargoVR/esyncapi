@@ -39,9 +39,7 @@ public class EnderecoController {
     @Transactional
     public ResponseEntity<EnderecoDTO> addEndereco(@RequestBody @Valid EnderecoDTORequest enderecoRequest, UriComponentsBuilder uriBuilder){
         Endereco enderecoInserido = repository.save(new Endereco(enderecoRequest));
-
         URI uri = uriBuilder.path("endereco/{id}").buildAndExpand(enderecoInserido.getId()).toUri();
-
         return ResponseEntity.created(uri).body(new EnderecoDTO(enderecoInserido));
     }
 
@@ -50,7 +48,6 @@ public class EnderecoController {
     public ResponseEntity updateEndereco(@PathVariable("id") Long idEndereco, @RequestBody EnderecoDTORequest enderecoRequest){
         Endereco endereco = repository.getReferenceById(idEndereco);
         endereco.update(enderecoRequest);
-
         return ResponseEntity.ok(endereco);
     }
 

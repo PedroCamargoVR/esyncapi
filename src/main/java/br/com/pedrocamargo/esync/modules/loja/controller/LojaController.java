@@ -7,6 +7,7 @@ import br.com.pedrocamargo.esync.modules.loja.dto.LojaDTO;
 import br.com.pedrocamargo.esync.modules.loja.dto.LojaDTORequest;
 import br.com.pedrocamargo.esync.modules.loja.model.Loja;
 import br.com.pedrocamargo.esync.modules.loja.repository.LojaRepository;
+import br.com.pedrocamargo.esync.modules.loja.service.LojaService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,52 +25,37 @@ import java.net.URI;
 public class LojaController {
 
     @Autowired
-    private LojaRepository repository;
-
-    @Autowired
-    private EnderecoRepository enderecoRepository;
+    LojaService lojaService;
 
     @GetMapping
     public ResponseEntity<Page<LojaDTO>> getLojas(Pageable pageable){
-        Page<LojaDTO> page = repository.findAll(pageable).map(LojaDTO::new);
-
+        Page<LojaDTO> page = lojaService.getLojas(pageable);
         return ResponseEntity.ok(page);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity getLojaById(@PathVariable("id") Long idLoja){
-        return ResponseEntity.ok(repository.getReferenceById(idLoja));
+        return ResponseEntity.ok(lojaService.getLoja(idLoja));
     }
 
     @PostMapping
     @Transactional
     public ResponseEntity addLoja(@RequestBody @Valid LojaDTORequest lojaRequest, UriComponentsBuilder uriBuilder){
-        Endereco endereco = enderecoRepository.getReferenceById(lojaRequest.id_endereco());
-
-        Loja lojaInserida = repository.save(new Loja(endereco,lojaRequest));
+        Loja lojaInserida = lojaService.adicionarLoja(lojaRequest);
         URI uri = uriBuilder.path("loja/{id}").buildAndExpand(lojaInserida.getId()).toUri();
-
         return ResponseEntity.created(uri).body(new LojaDTO(lojaInserida));
     }
 
     @PutMapping("/{id}")
     @Transactional
     public ResponseEntity updateLoja(@PathVariable("id") Long idLoja, @RequestBody LojaDTORequest lojaRequest){
-        Loja loja = repository.getReferenceById(idLoja);
-        if(loja.getEndereco().getId() != lojaRequest.id_endereco()){
-            Endereco endereco = enderecoRepository.getReferenceById(lojaRequest.id_endereco());
-            loja.update(endereco, lojaRequest);
-        }
-        loja.update(lojaRequest);
-
+        Loja loja = lojaService.atualizarLoja(idLoja,lojaRequest);
         return ResponseEntity.ok(new LojaDTO(loja));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity deleteLoja(@PathVariable("id") Long idLoja){
-        Loja loja = repository.getReferenceById(idLoja);
-        loja.delete();
-
+        lojaService.deletarLoja(idLoja);
         return ResponseEntity.ok().body(new MessageResponse(HttpStatus.OK.value(),"A Loja com o ID " + idLoja + " foi excluida corretamente."));
     }
 

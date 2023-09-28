@@ -9,6 +9,7 @@ import br.com.pedrocamargo.esync.modules.produto.dto.ProdutoDTO;
 import br.com.pedrocamargo.esync.modules.produto.dto.ProdutoDTORequest;
 import br.com.pedrocamargo.esync.modules.produto.model.Produto;
 import br.com.pedrocamargo.esync.modules.produto.repository.ProdutoRepository;
+import br.com.pedrocamargo.esync.modules.produto.service.ProdutoService;
 import br.com.pedrocamargo.esync.modules.tipoproduto.model.TipoProduto;
 import br.com.pedrocamargo.esync.modules.tipoproduto.repository.TipoProdutoRepository;
 import jakarta.transaction.Transactional;
@@ -29,71 +30,38 @@ import java.net.URI;
 public class ProdutoController {
 
     @Autowired
-    private ProdutoRepository repository;
-
-    @Autowired
-    private CompradorRepository compradorRepository;
-
-    @Autowired
-    private FornecedorRepository fornecedorRepository;
-
-    @Autowired
-    private TipoProdutoRepository tipoProdutoRepository;
+    ProdutoService produtoService;
 
     @GetMapping
     public ResponseEntity<Page<ProdutoDTO>> getAllProdutos(@PageableDefault(sort = "id", size = 20) Pageable pageable){
-        Page<ProdutoDTO> page = repository.findAll(pageable).map(ProdutoDTO::new);
-
+        Page<ProdutoDTO> page = produtoService.getProdutos(pageable);
         return ResponseEntity.ok(page);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ProdutoDTO> getProdutoById(@PathVariable("id") Long idProduto){
-        Produto produto = repository.getReferenceById(idProduto);
-
+        Produto produto = produtoService.getProduto(idProduto);
         return ResponseEntity.ok(new ProdutoDTO(produto));
     }
 
     @PostMapping
     @Transactional
     public ResponseEntity addProduto(@RequestBody @Valid ProdutoDTORequest produtoRequest, UriComponentsBuilder uriBUilder){
-        Fornecedor fornecedor = fornecedorRepository.getReferenceById(produtoRequest.id_fornecedor());
-        Comprador comprador = compradorRepository.getReferenceById(produtoRequest.id_comprador());
-        TipoProduto tipoProduto = tipoProdutoRepository.getReferenceById(produtoRequest.id_tipoproduto());
-        Produto produto = repository.save(new Produto(fornecedor,comprador,tipoProduto,produtoRequest));
-
+        Produto produto = produtoService.salvarProduto(produtoRequest);
         URI uri = uriBUilder.path("produto/{id}").buildAndExpand(produto.getId()).toUri();
-
         return ResponseEntity.created(uri).body(new ProdutoDTO(produto));
     }
 
     @PutMapping("/{id}")
     @Transactional
     public ResponseEntity updateProduto(@PathVariable("id") Long idProduto, @RequestBody ProdutoDTORequest produtoDTORequest){
-        Produto produto = repository.getReferenceById(idProduto);
-        Fornecedor fornecedor = produto.getFornecedor();
-        Comprador comprador = produto.getComprador();
-        TipoProduto tipoProduto = produto.getTipoProduto();
-
-        if(fornecedor.getId() != produtoDTORequest.id_fornecedor()){
-            fornecedor = fornecedorRepository.getReferenceById(produtoDTORequest.id_fornecedor());
-        }
-        if(comprador.getId() != produtoDTORequest.id_comprador()){
-            comprador = compradorRepository.getReferenceById(produtoDTORequest.id_comprador());
-        }
-        if(tipoProduto.getId() != produtoDTORequest.id_tipoproduto()){
-            tipoProduto = tipoProdutoRepository.getReferenceById(produtoDTORequest.id_tipoproduto());
-        }
-        produto.update(fornecedor,comprador,tipoProduto,produtoDTORequest);
-
+        Produto produto = produtoService.atualizarProduto(idProduto,produtoDTORequest);
         return ResponseEntity.ok(new ProdutoDTO(produto));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity deleteProduto(@PathVariable("id") Long idProduto){
-        Produto produto = repository.getReferenceById(idProduto);
-        produto.delete();
-
+        produtoService.deletarProduto(idProduto);
         return ResponseEntity.ok(new MessageResponse(HttpStatus.OK.value(),"O produto com ID " + idProduto + " foi excluido."));
     }
 }
