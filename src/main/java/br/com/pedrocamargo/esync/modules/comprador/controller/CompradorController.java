@@ -1,10 +1,9 @@
 package br.com.pedrocamargo.esync.modules.comprador.controller;
 
-import br.com.pedrocamargo.esync.helpers.MessageResponse;
+import br.com.pedrocamargo.esync.infra.helpers.MessageResponse;
 import br.com.pedrocamargo.esync.modules.comprador.dto.CompradorDTO;
 import br.com.pedrocamargo.esync.modules.comprador.dto.CompradorDTORequest;
 import br.com.pedrocamargo.esync.modules.comprador.model.Comprador;
-import br.com.pedrocamargo.esync.modules.comprador.repository.CompradorRepository;
 import br.com.pedrocamargo.esync.modules.comprador.service.CompradorService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
-import java.util.List;
 
 @RestController
 @RequestMapping("comprador")

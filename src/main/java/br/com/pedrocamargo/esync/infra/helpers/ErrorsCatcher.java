@@ -1,4 +1,4 @@
-package br.com.pedrocamargo.esync.helpers;
+package br.com.pedrocamargo.esync.infra.helpers;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;

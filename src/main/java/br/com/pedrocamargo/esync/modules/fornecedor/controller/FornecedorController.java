@@ -1,12 +1,9 @@
 package br.com.pedrocamargo.esync.modules.fornecedor.controller;
 
-import br.com.pedrocamargo.esync.helpers.MessageResponse;
-import br.com.pedrocamargo.esync.modules.endereco.model.Endereco;
-import br.com.pedrocamargo.esync.modules.endereco.repository.EnderecoRepository;
+import br.com.pedrocamargo.esync.infra.helpers.MessageResponse;
 import br.com.pedrocamargo.esync.modules.fornecedor.dto.FornecedorDTO;
 import br.com.pedrocamargo.esync.modules.fornecedor.dto.FornecedorDTORequest;
 import br.com.pedrocamargo.esync.modules.fornecedor.model.Fornecedor;
-import br.com.pedrocamargo.esync.modules.fornecedor.repository.FornecedorRepository;
 import br.com.pedrocamargo.esync.modules.fornecedor.service.FornecedorService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;

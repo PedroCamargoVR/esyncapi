@@ -1,4 +1,4 @@
-package br.com.pedrocamargo.esync.service;
+package br.com.pedrocamargo.esync.infra.service;
 
 import br.com.pedrocamargo.esync.modules.usuario.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;

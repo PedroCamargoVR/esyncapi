@@ -1,14 +1,10 @@
 package br.com.pedrocamargo.esync.modules.usuario.controller;
 
-import br.com.pedrocamargo.esync.helpers.MessageResponse;
-import br.com.pedrocamargo.esync.modules.permissao.model.Permissao;
-import br.com.pedrocamargo.esync.modules.permissao.repository.PermissaoRepository;
+import br.com.pedrocamargo.esync.infra.helpers.MessageResponse;
 import br.com.pedrocamargo.esync.modules.usuario.dto.UsuarioDTO;
 import br.com.pedrocamargo.esync.modules.usuario.dto.UsuarioDTORequest;
 import br.com.pedrocamargo.esync.modules.usuario.model.Usuario;
-import br.com.pedrocamargo.esync.modules.usuario.repository.UsuarioRepository;
 import br.com.pedrocamargo.esync.modules.usuario.service.UsuarioService;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

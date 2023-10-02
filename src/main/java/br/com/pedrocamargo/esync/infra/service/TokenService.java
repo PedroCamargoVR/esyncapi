@@ -1,4 +1,4 @@
-package br.com.pedrocamargo.esync.service;
+package br.com.pedrocamargo.esync.infra.service;
 
 import br.com.pedrocamargo.esync.exceptions.TokenNotValidException;
 import br.com.pedrocamargo.esync.modules.usuario.model.Usuario;

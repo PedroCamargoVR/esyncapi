@@ -1,17 +1,10 @@
 package br.com.pedrocamargo.esync.modules.produto.controller;
 
-import br.com.pedrocamargo.esync.helpers.MessageResponse;
-import br.com.pedrocamargo.esync.modules.comprador.model.Comprador;
-import br.com.pedrocamargo.esync.modules.comprador.repository.CompradorRepository;
-import br.com.pedrocamargo.esync.modules.fornecedor.model.Fornecedor;
-import br.com.pedrocamargo.esync.modules.fornecedor.repository.FornecedorRepository;
+import br.com.pedrocamargo.esync.infra.helpers.MessageResponse;
 import br.com.pedrocamargo.esync.modules.produto.dto.ProdutoDTO;
 import br.com.pedrocamargo.esync.modules.produto.dto.ProdutoDTORequest;
 import br.com.pedrocamargo.esync.modules.produto.model.Produto;
-import br.com.pedrocamargo.esync.modules.produto.repository.ProdutoRepository;
 import br.com.pedrocamargo.esync.modules.produto.service.ProdutoService;
-import br.com.pedrocamargo.esync.modules.tipoproduto.model.TipoProduto;
-import br.com.pedrocamargo.esync.modules.tipoproduto.repository.TipoProdutoRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

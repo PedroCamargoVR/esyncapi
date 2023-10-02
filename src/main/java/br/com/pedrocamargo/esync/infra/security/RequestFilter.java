@@ -1,10 +1,10 @@
-package br.com.pedrocamargo.esync.security;
+package br.com.pedrocamargo.esync.infra.security;
 
 import br.com.pedrocamargo.esync.exceptions.TokenNotFoundException;
 import br.com.pedrocamargo.esync.exceptions.TokenNotValidException;
-import br.com.pedrocamargo.esync.helpers.MessageResponse;
+import br.com.pedrocamargo.esync.infra.helpers.MessageResponse;
 import br.com.pedrocamargo.esync.modules.usuario.repository.UsuarioRepository;
-import br.com.pedrocamargo.esync.service.TokenService;
+import br.com.pedrocamargo.esync.infra.service.TokenService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

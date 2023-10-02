@@ -1,9 +1,9 @@
 package br.com.pedrocamargo.esync.modules.autenticacao.controller;
 
-import br.com.pedrocamargo.esync.helpers.MessageResponse;
+import br.com.pedrocamargo.esync.infra.helpers.MessageResponse;
 import br.com.pedrocamargo.esync.modules.autenticacao.dto.AutenticacaoDTO;
 import br.com.pedrocamargo.esync.modules.usuario.model.Usuario;
-import br.com.pedrocamargo.esync.service.TokenService;
+import br.com.pedrocamargo.esync.infra.service.TokenService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
