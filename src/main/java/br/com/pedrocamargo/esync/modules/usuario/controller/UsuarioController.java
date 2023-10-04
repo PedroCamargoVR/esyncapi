@@ -10,6 +10,8 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -27,6 +29,7 @@ import java.net.URI;
 @Tag(name = "Usuario", description = "Realizar todas as operações relacionados com os usuários")
 @RestController
 @RequestMapping("/v1/usuario")
+@SecurityRequirement(name = "bearer-key")
 public class UsuarioController {
 
     @Autowired

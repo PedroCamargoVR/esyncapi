@@ -16,6 +16,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -32,6 +33,7 @@ import java.net.URI;
 @Tag(name = "Locação", description = "Realizar todas as operações relacionados com as locações")
 @RestController
 @RequestMapping("/v1/locacao")
+@SecurityRequirement(name = "bearer-key")
 public class LocacaoController {
 
     @Autowired
