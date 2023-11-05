@@ -23,7 +23,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests()
-                    .requestMatchers(HttpMethod.POST,"/auth").permitAll()
+                    .requestMatchers(HttpMethod.POST,"/v1/auth").permitAll()
                     .requestMatchers("/swagger-ui.html/**").permitAll()
                     .requestMatchers("/swagger-ui/**").permitAll()
                     .requestMatchers("/v3/api-docs/**").permitAll()

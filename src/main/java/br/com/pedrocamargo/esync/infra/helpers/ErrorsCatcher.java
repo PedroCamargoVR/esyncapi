@@ -43,7 +43,7 @@ public class ErrorsCatcher {
     }
 
     @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity tratarErroAcessoNegado() {
+    public ResponseEntity tratarErroAcessoNegado(AccessDeniedException e) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new MessageResponse(HttpStatus.FORBIDDEN.value(), "Acesso negado"));
     }
 

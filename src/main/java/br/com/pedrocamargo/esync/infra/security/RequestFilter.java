@@ -9,6 +9,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jdk.swing.interop.SwingInterOpUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -30,22 +31,26 @@ public class RequestFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        try{
-            String token = getHeaderToken(request);
-
-            if(token != null && !request.getRequestURI().equals("/auth")){
-                String subject = tokenService.validateToken(token);
-                UserDetails usuario = usuarioRepository.findByUsuario(subject);
-
-                SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(usuario,null, usuario.getAuthorities()));
-            }
-
+        if(request.getRequestURI().equals("/api/esync/v1/auth")){
             filterChain.doFilter(request, response);
-        }catch (TokenNotFoundException | TokenNotValidException ex){
-            response.setStatus(HttpStatus.UNAUTHORIZED.value());
-            response.getWriter().write(new ObjectMapper().writeValueAsString(new MessageResponse(HttpStatus.UNAUTHORIZED.value(), "Token JWT nao enviado ou invalido")));
-            response.getWriter().flush();
-            return;
+        }else{
+            try{
+                String token = getHeaderToken(request);
+
+                if(token != null && !request.getRequestURI().equals("/auth")){
+                    String subject = tokenService.validateToken(token);
+                    UserDetails usuario = usuarioRepository.findByUsuario(subject);
+
+                    SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(usuario,null, usuario.getAuthorities()));
+                }
+
+                filterChain.doFilter(request, response);
+            }catch (TokenNotFoundException | TokenNotValidException ex){
+                response.setStatus(HttpStatus.UNAUTHORIZED.value());
+                response.getWriter().write(new ObjectMapper().writeValueAsString(new MessageResponse(HttpStatus.UNAUTHORIZED.value(), "Token JWT nao enviado ou invalido")));
+                response.getWriter().flush();
+                return;
+            }
         }
     }
     private String getHeaderToken(HttpServletRequest request) {
